@@ -9,8 +9,8 @@ class SnakeWidget(game.GameWidget):
     def __init__(self):
         super().__init__(800, 600)
 
-    def createCanvas(self, frame_width, frame_height):
-        return SnakeCanvas(frame_width, frame_height)
+    def createCanvas(self):
+        return SnakeCanvas(self)
 
 def main():
     root = tk.Tk()
