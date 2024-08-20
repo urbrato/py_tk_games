@@ -3,6 +3,7 @@ import game_panel_engine as game
 
 class SnakeCanvas(game.GameCanvas):
     def initGame(self):
+        self.master.title('Змейка')
         self.create_oval(0, 0, 800, 600)
 
 class SnakeWidget(game.GameWidget):
@@ -15,7 +16,6 @@ class SnakeWidget(game.GameWidget):
 def main():
     root = tk.Tk()
     snake = SnakeWidget()
-    snake.master.title('Змейка')
     root.mainloop()
 
 if __name__ == '__main__':
