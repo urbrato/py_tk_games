@@ -1,4 +1,5 @@
 import tkinter as Tk
+from some_math import *
 
 class GameCanvas: pass
 
@@ -103,20 +104,12 @@ class GameCanvas(Tk.Canvas):
         '''
         pass
 
-    def clamp(value: int, min: int, max: int) -> int :
-        if value < min:
-            return min
-        elif value > max:
-            return max
-        else:
-            return value
-
     def set_board_size_by_cells_count(self, nx: int, ny: int):
-        self._width = self.clamp(nx, self._MIN_WIDTH, self._MAX_WIDTH)
-        self._height = self.clamp(ny, self._MIN_HEIGHT, self._MAX_HEIGHT)
+        self._width = clamp(nx, self._MIN_WIDTH, self._MAX_WIDTH)
+        self._height = clamp(ny, self._MIN_HEIGHT, self._MAX_HEIGHT)
         self._cellSize = min(self._frame_width / self._width, self._frame_height / self._height)
 
     def set_board_size_by_cells_size(self, cell_size: int):
-        self._cellSize = self.clamp(cell_size, 5, 200)
+        self._cellSize = clamp(cell_size, self._MIN_CELL_SIZE, self._MAX_CELL_SIZE)
         self._width = self._frame_width / self._cellSize
         self._height = self._frame_height / self._cellSize
