@@ -67,9 +67,30 @@ class GameWidget(Tk.Frame):
         return GameCanvas(self)
 
 class GameCell:
+    '''
+    Клетка игрового поля.
+    '''
     _inner_image = None   
 
-    def __init__(self, canvas: Tk.Canvas, left: int, top: int, size: int, outline='black', fill='white'):
+    def __init__(self, canvas: Tk.Canvas, 
+                 left: int, top: int, size: int, 
+                 outline='black', fill='white'):
+        '''
+        Конструктор клетки.
+
+        :param canvas: Канва для рисования
+        :type canvas: tkinter.Canvas
+        :param left: левая координата клетки на канве
+        :type left: int
+        :param top: верхняя координата клетки на канве
+        :type top: int
+        :param size: размер клетки вдоль любой стороны
+        :type size: int
+        :param outline: цвет границы клетки
+        :type outline: string
+        :param fill: цвет фона клетки
+        :type fill: string
+        '''
         self._canvas = canvas
         self._cell_rect = canvas.create_rectangle(
             left, top, left + size, top + size,
@@ -117,6 +138,14 @@ class GameCanvas(Tk.Canvas):
         pass
 
     def set_board_size_by_cells_count(self, nx: int, ny: int):
+        '''
+        Установка размера игрового поля по количеству клеток
+
+        :param nx: количество клеток по горизонтали
+        :type nx: int
+        :param ny: количество клеток по вертикали
+        :type ny: int
+        '''        
         self._width = clamp(nx, self._MIN_WIDTH, self._MAX_WIDTH)
         self._height = clamp(ny, self._MIN_HEIGHT, self._MAX_HEIGHT)
         self._cellSize = min(
@@ -125,6 +154,12 @@ class GameCanvas(Tk.Canvas):
         self.__create_cells()
 
     def set_board_size_by_cells_size(self, cell_size: int):
+        '''
+        Установка размера игрового поля по размеру клетки
+
+        :param cell_size: размер клетки
+        :type cell_size: int
+        '''
         self._cellSize = clamp(cell_size, 
             self._MIN_CELL_SIZE, 
             self._MAX_CELL_SIZE)
@@ -133,6 +168,9 @@ class GameCanvas(Tk.Canvas):
         self.__create_cells()
 
     def __create_cells(self):
+        '''
+        Создание клеток
+        '''
         board_left = (self._frame_width - self._cellSize * self._width) // 2 + self._padx
         board_top = (self._frame_height - self._cellSize * self._height) // 2 + self._pady
 
