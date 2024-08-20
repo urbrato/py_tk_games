@@ -92,6 +92,11 @@ class GameCell:
         :type fill: string
         '''
         self._canvas = canvas
+
+        self._left = left
+        self._top = top
+        self._size = size
+
         self._cell_rect = canvas.create_rectangle(
             left, top, left + size, top + size,
             fill=fill, outline=outline)
@@ -113,6 +118,20 @@ class GameCell:
         :type color: str
         '''
         self._canvas.itemconfig(self._cell_rect, outline=color)
+
+    def set_image(self, image):
+        '''
+        Отображение картинки
+
+        :param image: картинка для отображения в центре клетки
+        '''
+        if self._inner_image != None:
+            self._canvas.delete(self._inner_image)
+        
+        x = self._size // 2 + self._left
+        y = self._size  // 2 + self._top
+
+        self._inner_image = self._canvas.create_image(x, y, image=image)
 
 class GameCanvas(Tk.Canvas):
     '''
@@ -232,6 +251,18 @@ class GameCanvas(Tk.Canvas):
         for col in self._cells:
             for cell in col:
                 cell.set_outline_color(color)
+
+    def draw_image(self, x: int, y: int, image):
+        '''
+        Отображение картинки в клетке
+
+        :param x: номер клетки по горизонтали
+        :type x: int
+        :param y: номер клетки по вертикали
+        :type y: int
+        :param image: картинка
+        '''
+        self._cells[x][y].set_image(image)
 
     def __create_cells(self):
         '''

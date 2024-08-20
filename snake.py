@@ -17,6 +17,35 @@ class GameObject:
         self.x = x
         self.y = y
 
+class Apple(GameObject):
+    '''
+    Объект яблоко
+    '''
+    _APPLE_IMAGE = None
+
+    def __init__(self, x: int, y: int):
+        '''
+        Конструктор игрового объекта
+
+        :param x: номер клетки объекта по горизонтали
+        :type x: int
+        :param y: номер клетки объекта по вертикали
+        :type y: int
+        '''
+        super().__init__(x, y)
+
+    def draw(self, canvas: game.GameCanvas):
+        '''
+        Отображение яблока на канве
+
+        :param canvas: канва для отображения в клетке
+        :type canvas: game.GameCanvas
+        '''
+        if Apple._APPLE_IMAGE == None:
+            Apple._APPLE_IMAGE = tk.PhotoImage(file='snake_img\\apple.png')
+
+        canvas.draw_image(self.x, self.y, Apple._APPLE_IMAGE)
+
 class SnakeCanvas(game.GameCanvas):
     '''
     Игровая канва (основной класс игры)
