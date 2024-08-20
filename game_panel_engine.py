@@ -97,7 +97,22 @@ class GameCell:
             fill=fill, outline=outline)
         
     def set_fill_color(self, color: str):
+        '''
+        Установка цвета заливки клетки
+
+        :param color: цвет фона
+        :type color: str
+        '''
         self._canvas.itemconfig(self._cell_rect, fill=color)
+
+    def set_outline_color(self, color: str):
+        '''
+        Установка цвета границы клетки
+
+        :param color: цвет фона
+        :type color: str
+        '''
+        self._canvas.itemconfig(self._cell_rect, outline=color)
 
 class GameCanvas(Tk.Canvas):
     '''
@@ -171,12 +186,52 @@ class GameCanvas(Tk.Canvas):
         self.__create_cells()
 
     def set_cell_color(self, x: int, y: int, color: str):
+        '''
+        Установка цвета заливки клетки
+
+        :param x: номер клетки по горизонтали
+        :type x: int
+        :param y: номер клетки по вертикали
+        :type y: int
+        :param color: цвет фона
+        :type color: str
+        '''
         self._cells[x][y].set_fill_color(color)
 
     def set_all_cells_color(self, color: str):
+        '''
+        Установка цвета заливки всем клеткам
+
+        :param color: цвет фона
+        :type color: str
+        '''
         for col in self._cells:
             for cell in col:
                 cell.set_fill_color(color)
+
+    def set_cell_border_color(self, x: int, y: int, color: str):
+        '''
+        Установка цвета границы клетки
+
+        :param x: номер клетки по горизонтали
+        :type x: int
+        :param y: номер клетки по вертикали
+        :type y: int
+        :param color: цвет фона
+        :type color: str
+        '''
+        self._cells[x][y].set_outline_color(color)
+
+    def set_all_cells_border_color(self, color: str):
+        '''
+        Установка цвета границы всем клеткам
+
+        :param color: цвет фона
+        :type color: str
+        '''
+        for col in self._cells:
+            for cell in col:
+                cell.set_outline_color(color)
 
     def __create_cells(self):
         '''
