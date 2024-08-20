@@ -95,6 +95,9 @@ class GameCell:
         self._cell_rect = canvas.create_rectangle(
             left, top, left + size, top + size,
             fill=fill, outline=outline)
+        
+    def set_fill_color(self, color: str):
+        self._canvas.itemconfig(self._cell_rect, fill=color)
 
 class GameCanvas(Tk.Canvas):
     '''
@@ -166,6 +169,14 @@ class GameCanvas(Tk.Canvas):
         self._width = self._frame_width // self._cellSize
         self._height = self._frame_height // self._cellSize
         self.__create_cells()
+
+    def set_cell_color(self, x: int, y: int, color: str):
+        self._cells[x][y].set_fill_color(color)
+
+    def set_all_cells_color(self, color: str):
+        for col in self._cells:
+            for cell in col:
+                cell.set_fill_color(color)
 
     def __create_cells(self):
         '''

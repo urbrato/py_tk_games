@@ -5,6 +5,7 @@ class SnakeCanvas(game.GameCanvas):
     def init_game(self):
         self.master.title('Змейка')
         self.set_board_size_by_cells_size(20)
+        self.set_all_cells_color('beige')
 
 class SnakeWidget(game.GameWidget):
     def __init__(self):
