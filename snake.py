@@ -4,6 +4,7 @@ import game_panel_engine as game
 class SnakeCanvas(game.GameCanvas):
     def init_game(self):
         self.master.title('Змейка')
+        self.set_board_size_by_cells_size(20)
 
 class SnakeWidget(game.GameWidget):
     def __init__(self):

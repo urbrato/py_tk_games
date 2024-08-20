@@ -66,6 +66,15 @@ class GameWidget(Tk.Frame):
         '''
         return GameCanvas(self)
 
+class GameCell:
+    _inner_image = None   
+
+    def __init__(self, canvas: Tk.Canvas, left: int, top: int, size: int, outline='black', fill='white'):
+        self._canvas = canvas
+        self._cell_rect = canvas.create_rectangle(
+            left, top, left + size, top + size,
+            fill=fill, outline=outline)
+
 class GameCanvas(Tk.Canvas):
     '''
     Игровая канва.
@@ -85,6 +94,8 @@ class GameCanvas(Tk.Canvas):
     _width: int = 3;
     _height: int = 3;
     _cellSize: int;
+
+    _cells: list[list[GameCell]]
     
     def __init__(self, widget: GameWidget):
         super().__init__(
@@ -92,8 +103,9 @@ class GameCanvas(Tk.Canvas):
             height=widget.frame_height
         )
         
-        self._frame_width = widget.frame_width
-        self._frame_height = widget.frame_height
+        self._padx = self._pady = 1
+        self._frame_width = widget.frame_width - self._padx * 2
+        self._frame_height = widget.frame_height - self._pady * 2
         
         self.init_game()
         self.pack()
@@ -110,6 +122,7 @@ class GameCanvas(Tk.Canvas):
         self._cellSize = min(
             self._frame_width // self._width, 
             self._frame_height // self._height)
+        self.__create_cells()
 
     def set_board_size_by_cells_size(self, cell_size: int):
         self._cellSize = clamp(cell_size, 
@@ -117,3 +130,18 @@ class GameCanvas(Tk.Canvas):
             self._MAX_CELL_SIZE)
         self._width = self._frame_width // self._cellSize
         self._height = self._frame_height // self._cellSize
+        self.__create_cells()
+
+    def __create_cells(self):
+        board_left = (self._frame_width - self._cellSize * self._width) // 2 + self._padx
+        board_top = (self._frame_height - self._cellSize * self._height) // 2 + self._pady
+
+        self._cells = []
+        for i in range(self._width):
+            self._cells.append([])
+            for j in range(self._height):
+                self._cells[i].append(
+                    GameCell(self, 
+                             board_left + i * self._cellSize,
+                             board_top + j * self._cellSize,
+                             self._cellSize))
