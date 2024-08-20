@@ -1,6 +1,11 @@
 import tkinter as tk
 import game_panel_engine as game
 
+class GameObject:
+    def __init__(self, x: int, y: int):
+        self.x = x
+        self.y = y
+
 class SnakeCanvas(game.GameCanvas):
     def init_game(self):
         self.master.title('Змейка')
