@@ -4,7 +4,6 @@ import game_panel_engine as game
 class SnakeCanvas(game.GameCanvas):
     def initGame(self):
         self.master.title('Змейка')
-        self.create_oval(0, 0, 800, 600)
 
 class SnakeWidget(game.GameWidget):
     def __init__(self):
