@@ -107,9 +107,13 @@ class GameCanvas(Tk.Canvas):
     def set_board_size_by_cells_count(self, nx: int, ny: int):
         self._width = clamp(nx, self._MIN_WIDTH, self._MAX_WIDTH)
         self._height = clamp(ny, self._MIN_HEIGHT, self._MAX_HEIGHT)
-        self._cellSize = min(self._frame_width // self._width, self._frame_height // self._height)
+        self._cellSize = min(
+            self._frame_width // self._width, 
+            self._frame_height // self._height)
 
     def set_board_size_by_cells_size(self, cell_size: int):
-        self._cellSize = clamp(cell_size, self._MIN_CELL_SIZE, self._MAX_CELL_SIZE)
+        self._cellSize = clamp(cell_size, 
+            self._MIN_CELL_SIZE, 
+            self._MAX_CELL_SIZE)
         self._width = self._frame_width // self._cellSize
         self._height = self._frame_height // self._cellSize
