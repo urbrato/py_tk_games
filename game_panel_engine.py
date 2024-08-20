@@ -30,13 +30,13 @@ class GameWidget(Tk.Frame):
         self.frame_height = frame_height
         
         # размерим и центрируем окно
-        self.centerWindow(frame_width, frame_height)        
+        self.center_window(frame_width, frame_height)        
         
         # создаём канву и всё это добро распахиваем на всё окно
-        self.canvas = self.createCanvas()
+        self.canvas = self.create_canvas()
         self.pack(expand=True)
 
-    def centerWindow(self, frame_width:int, frame_height:int):
+    def center_window(self, frame_width:int, frame_height:int):
         '''
         Задаёт размеры и положение окна - размеры заданные, положение по центру экрана
 
@@ -57,7 +57,7 @@ class GameWidget(Tk.Frame):
         # размерим и центрируем окно
         self.master.geometry(f'{frame_width}x{frame_height}+{x}+{y}')
 
-    def createCanvas(self) -> GameCanvas:
+    def create_canvas(self) -> GameCanvas:
         '''
         Создание канвы.
 
@@ -73,16 +73,50 @@ class GameCanvas(Tk.Canvas):
     
     Пропишите создание своего класса в методе createCanvas вашего наследника GameWidget.
     '''
+
+    _MIN_WIDTH = 3;
+    _MAX_WIDTH = 100;
+    _MIN_HEIGHT = 3;
+    _MAX_HEIGHT = 100;
+    _MIN_CELL_SIZE = 5;
+    _MAX_CELL_SIZE = 200;
+    
+    _width: int = 3;
+    _height: int = 3;
+    _cellSize: int;
+    
     def __init__(self, widget: GameWidget):
         super().__init__(
             width=widget.frame_width,
             height=widget.frame_height
         )
-        self.initGame()
+        
+        self._frame_width = widget.frame_width
+        self._frame_height = widget.frame_height
+        
+        self.init_game()
         self.pack()
 
-    def initGame(self):
+    def init_game(self):
         '''
         Переопределите этот метод для инициализации игрового мира
         '''
         pass
+
+    def clamp(value: int, min: int, max: int) -> int :
+        if value < min:
+            return min
+        elif value > max:
+            return max
+        else:
+            return value
+
+    def set_board_size_by_cells_count(self, nx: int, ny: int):
+        self._width = self.clamp(nx, self._MIN_WIDTH, self._MAX_WIDTH)
+        self._height = self.clamp(ny, self._MIN_HEIGHT, self._MAX_HEIGHT)
+        self._cellSize = min(self._frame_width / self._width, self._frame_height / self._height)
+
+    def set_board_size_by_cells_size(self, cell_size: int):
+        self._cellSize = self.clamp(cell_size, 5, 200)
+        self._width = self._frame_width / self._cellSize
+        self._height = self._frame_height / self._cellSize

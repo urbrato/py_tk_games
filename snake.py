@@ -2,14 +2,14 @@ import tkinter as tk
 import game_panel_engine as game
 
 class SnakeCanvas(game.GameCanvas):
-    def initGame(self):
+    def init_game(self):
         self.master.title('Змейка')
 
 class SnakeWidget(game.GameWidget):
     def __init__(self):
         super().__init__(800, 600)
 
-    def createCanvas(self):
+    def create_canvas(self):
         return SnakeCanvas(self)
 
 def main():
