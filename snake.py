@@ -62,9 +62,9 @@ class SnakeCanvas(game.GameCanvas):
         '''
         Настройка параметров игры
         '''
-        self.create_board()
+        self.draw_board()
 
-    def create_board(self):
+    def draw_board(self):
         '''
         Настройка игрового поля
         '''
