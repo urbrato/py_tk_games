@@ -137,7 +137,35 @@ class Snake:
         '''
         Перемещение змейки
         '''
-        pass
+        head = self.create_new_head()
+        self._snakeParts.insert(0, head)
+        self.remove_tail()
+        self.draw()
+
+    def create_new_head(self) -> GameObject:
+        '''
+        Создаёт (но не добавляет) новую голову
+        '''
+        x = self._snakeParts[0].x
+        y = self._snakeParts[0].y
+
+        match self._direction:
+            case Direction.LEFT:
+                return GameObject(x - 1, y)
+            case Direction.TOP:
+                return GameObject(x, y - 1)
+            case Direction.RIGHT:
+                return GameObject(x + 1, y)
+            case Direction.DOWN:
+                return GameObject(x, y + 1)
+            
+    def remove_tail(self):
+        '''
+        Удаляет хвост
+        '''
+        tail = self._snakeParts[-1]
+        self._canvas.draw_image(tail.x, tail.y, None)
+        self._snakeParts.remove(tail)
             
 class SnakeCanvas(game.GameCanvas):
     '''
