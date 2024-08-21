@@ -58,17 +58,17 @@ class Direction(Enum):
     DOWN = 3
     LEFT = 4
 
-    HORIZONTAL = {LEFT, RIGHT}
-    VERTICAL = {UP, DOWN}
+HORIZONTAL = {Direction.LEFT, Direction.RIGHT}
+VERTICAL = {Direction.UP, Direction.DOWN}
 
-    def allowables(self):
-        '''
-        На какое направление можно изменить с текущего
-        '''
-        if self in Direction.VERTICAL:
-            return Direction.HORIZONTAL
-        else:
-            return Direction.VERTICAL
+def allowables(direction):
+    '''
+    На какое направление можно изменить с текущего
+    '''
+    if direction in VERTICAL:
+        return HORIZONTAL
+    else:
+        return VERTICAL
 
 class Snake:
     '''
@@ -130,7 +130,7 @@ class Snake:
         '''
         Изменение направления движения змейки
         '''
-        if direction in self._direction.allowables():
+        if direction in allowables(self._direction):
             self._direction = direction
 
     def move(self): 
@@ -160,7 +160,7 @@ class Snake:
         match self._direction:
             case Direction.LEFT:
                 return GameObject(x - 1, y)
-            case Direction.TOP:
+            case Direction.UP:
                 return GameObject(x, y - 1)
             case Direction.RIGHT:
                 return GameObject(x + 1, y)
@@ -212,6 +212,14 @@ class SnakeCanvas(game.GameCanvas):
         События по таймеру
         '''
         self._snake.move()
+
+    def on_key_press(self, e):
+        key = e.keysym
+        match key:
+            case 'Left': self._snake.set_direction(Direction.LEFT)
+            case 'Up': self._snake.set_direction(Direction.UP)
+            case 'Right': self._snake.set_direction(Direction.RIGHT)
+            case 'Down': self._snake.set_direction(Direction.DOWN)
 
 class SnakeWidget(game.GameWidget):
     '''

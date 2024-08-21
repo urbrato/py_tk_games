@@ -170,6 +170,8 @@ class GameCanvas(Tk.Canvas):
         self._timer_ms = 0
         self._timer_started = False
         
+        self.bind_all('<Key>', self.on_key_press)
+
         self.init_game()
         self.pack()
 
@@ -185,6 +187,14 @@ class GameCanvas(Tk.Canvas):
 
         :param timer_step: номер шага таймера
         :type timer_step: int
+        '''
+        pass
+
+    def on_key_press(self, e):
+        '''
+        Переопределите этот метод для обработки нажатий клавиш
+
+        :param e: событие tkinter <Key>
         '''
         pass
     
