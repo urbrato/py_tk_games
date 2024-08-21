@@ -34,6 +34,8 @@ class Apple(GameObject):
         '''
         super().__init__(x, y)
 
+        self._is_alive = True
+
     def draw(self, canvas: game.GameCanvas):
         '''
         Отображение яблока на канве
@@ -52,6 +54,7 @@ class Snake:
     '''
     
     _HEAD_IMAGE = None
+    _DEAD_IMAGE = None
     _BODY_IMAGE = None
 
     def __init__(self, x: int, y: int):
@@ -71,6 +74,8 @@ class Snake:
             GameObject(x + 1, y),
             GameObject(x + 2, y)]
         
+        self._is_alive = True
+        
     def draw(self, canvas: game.GameCanvas):
         '''
         Отображение змейки на канве
@@ -84,10 +89,13 @@ class Snake:
         if Snake._BODY_IMAGE == None:
             Snake._BODY_IMAGE = tk.PhotoImage(file='snake_img\\body.png')
 
+        if Snake._DEAD_IMAGE == None:
+            Snake._DEAD_IMAGE = tk.PhotoImage(file='snake_img\\dead.png')
+
         canvas.draw_image(
             self._snakeParts[0].x,
             self._snakeParts[0].y,
-            Snake._HEAD_IMAGE)
+            Snake._HEAD_IMAGE if self._is_alive else Snake._DEAD_IMAGE)
         
         for i in range(1, len(self._snakeParts)):
             canvas.draw_image(
