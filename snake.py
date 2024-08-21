@@ -1,6 +1,7 @@
 import tkinter as tk
 import game_panel_engine as game
 from enum import Enum
+from random import randint
 
 class GameObject:
     '''
@@ -133,9 +134,12 @@ class Snake:
         if direction in allowables(self._direction):
             self._direction = direction
 
-    def move(self): 
+    def move(self, apple: Apple): 
         '''
         Перемещение змейки
+
+        :param apple: яблоко
+        :type apple: Apple
         '''
         head = self.create_new_head()
         
@@ -143,7 +147,11 @@ class Snake:
             head.y >= 0 and head.y < self._canvas._height):
             
             self._snakeParts.insert(0, head)
-            self.remove_tail()
+
+            if head.x == apple.x and head.y == apple.y:
+                apple.is_alive = False
+            else:
+                self.remove_tail()
         else:
             self.is_alive = False
             self._canvas.stop_timer()
@@ -195,6 +203,8 @@ class SnakeCanvas(game.GameCanvas):
         Настройка параметров игры
         '''
         self._snake = Snake(self._width // 2, self._height // 2, self)
+        self.create_new_apple()
+
         self._turn_delay = SnakeCanvas._TURN_DELAY
         self.start_timer(self._turn_delay)
 
@@ -207,11 +217,23 @@ class SnakeCanvas(game.GameCanvas):
         self.set_all_cells_color('beige')
         self._snake.draw()
 
+    def create_new_apple(self):
+        '''
+        Создание яблока
+        '''
+        self._apple = Apple(
+            randint(0, self._width - 1), 
+            randint(0, self._height - 1),
+            self)
+        self._apple.draw()
+
     def on_timer(self, timer_step: int):
         '''
         События по таймеру
         '''
-        self._snake.move()
+        self._snake.move(self._apple)
+        if not self._apple.is_alive:
+            self.create_new_apple()
 
     def on_key_press(self, e):
         key = e.keysym
