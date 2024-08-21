@@ -138,8 +138,16 @@ class Snake:
         Перемещение змейки
         '''
         head = self.create_new_head()
-        self._snakeParts.insert(0, head)
-        self.remove_tail()
+        
+        if (head.x >= 0 and head.x < self._canvas._width and 
+            head.y >= 0 and head.y < self._canvas._height):
+            
+            self._snakeParts.insert(0, head)
+            self.remove_tail()
+        else:
+            self.is_alive = False
+            self._canvas.stop_timer()
+
         self.draw()
 
     def create_new_head(self) -> GameObject:
