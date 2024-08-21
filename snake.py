@@ -24,7 +24,7 @@ class Apple(GameObject):
     '''
     _APPLE_IMAGE = None
 
-    def __init__(self, x: int, y: int):
+    def __init__(self, x: int, y: int, canvas: game.GameCanvas):
         '''
         Конструктор игрового объекта
 
@@ -32,22 +32,22 @@ class Apple(GameObject):
         :type x: int
         :param y: номер клетки объекта по вертикали
         :type y: int
+        :param canvas: канва для отображения в клетке
+        :type canvas: game.GameCanvas
         '''
         super().__init__(x, y)
 
         self.is_alive = True
+        self._canvas = canvas
 
-    def draw(self, canvas: game.GameCanvas):
+    def draw(self):
         '''
         Отображение яблока на канве
-
-        :param canvas: канва для отображения в клетке
-        :type canvas: game.GameCanvas
         '''
         if Apple._APPLE_IMAGE == None:
             Apple._APPLE_IMAGE = tk.PhotoImage(file='snake_img\\apple.png')
 
-        canvas.draw_image(self.x, self.y, Apple._APPLE_IMAGE)
+        self._canvas.draw_image(self.x, self.y, Apple._APPLE_IMAGE)
 
 class Direction(Enum):
     '''
@@ -79,7 +79,7 @@ class Snake:
     _DEAD_IMAGE = None
     _BODY_IMAGE = None
 
-    def __init__(self, x: int, y: int):
+    def __init__(self, x: int, y: int, canvas: game.GameCanvas):
         '''
         Конструктор змейки.
 
@@ -90,6 +90,8 @@ class Snake:
         :type x: int
         :param y: вертикальная координата головы
         :type y: int
+        :param canvas: канва для отображения
+        :type canvas: game.GameCanvas
         '''
         self._snakeParts = [
             GameObject(x, y), 
@@ -98,13 +100,11 @@ class Snake:
         
         self.is_alive = True
         self._direction = Direction.LEFT
+        self._canvas = canvas
         
-    def draw(self, canvas: game.GameCanvas):
+    def draw(self):
         '''
         Отображение змейки на канве
-
-        :param canvas: канва для отображения
-        :type canvas: game.GameCanvas
         '''
         if Snake._HEAD_IMAGE == None:
             Snake._HEAD_IMAGE = tk.PhotoImage(file='snake_img\\head.png')
@@ -115,13 +115,13 @@ class Snake:
         if Snake._DEAD_IMAGE == None:
             Snake._DEAD_IMAGE = tk.PhotoImage(file='snake_img\\dead.png')
 
-        canvas.draw_image(
+        self._canvas.draw_image(
             self._snakeParts[0].x,
             self._snakeParts[0].y,
             Snake._HEAD_IMAGE if self.is_alive else Snake._DEAD_IMAGE)
         
         for i in range(1, len(self._snakeParts)):
-            canvas.draw_image(
+            self._canvas.draw_image(
                 self._snakeParts[i].x,
                 self._snakeParts[i].y,
                 Snake._BODY_IMAGE)
@@ -158,7 +158,7 @@ class SnakeCanvas(game.GameCanvas):
         '''
         Настройка параметров игры
         '''
-        self._snake = Snake(self._width // 2, self._height // 2)
+        self._snake = Snake(self._width // 2, self._height // 2, self)
         self.start_timer(self._TURN_DELAY)
 
         self.setup_board()
@@ -168,7 +168,7 @@ class SnakeCanvas(game.GameCanvas):
         Отрисовка игрового поля
         '''
         self.set_all_cells_color('beige')
-        self._snake.draw(self)
+        self._snake.draw()
 
     def on_timer(self, timer_step: int):
         '''
