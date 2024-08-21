@@ -127,6 +127,9 @@ class Snake:
                 Snake._BODY_IMAGE)
             
     def set_direction(self, direction: Direction):
+        '''
+        Изменение направления движения змейки
+        '''
         if direction in self._direction.allowables():
             self._direction = direction
             
