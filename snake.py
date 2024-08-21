@@ -1,5 +1,6 @@
 import tkinter as tk
 import game_panel_engine as game
+from enum import Enum
 
 class GameObject:
     '''
@@ -48,6 +49,27 @@ class Apple(GameObject):
 
         canvas.draw_image(self.x, self.y, Apple._APPLE_IMAGE)
 
+class Direction(Enum):
+    '''
+    Направление движения
+    '''
+    UP = 1
+    RIGHT = 2
+    DOWN = 3
+    LEFT = 4
+
+    HORIZONTAL = {LEFT, RIGHT}
+    VERTICAL = {UP, DOWN}
+
+    def allowables(self):
+        '''
+        На какое направление можно изменить с текущего
+        '''
+        if self in Direction.VERTICAL:
+            return Direction.HORIZONTAL
+        else:
+            return Direction.VERTICAL
+
 class Snake:
     '''
     Змейка
@@ -75,6 +97,7 @@ class Snake:
             GameObject(x + 2, y)]
         
         self.is_alive = True
+        self._direction = Direction.LEFT
         
     def draw(self, canvas: game.GameCanvas):
         '''
@@ -102,7 +125,11 @@ class Snake:
                 self._snakeParts[i].x,
                 self._snakeParts[i].y,
                 Snake._BODY_IMAGE)
-
+            
+    def set_direction(self, direction: Direction):
+        if direction in self._direction.allowables():
+            self._direction = direction
+            
 class SnakeCanvas(game.GameCanvas):
     '''
     Игровая канва (основной класс игры)
