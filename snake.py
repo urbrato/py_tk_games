@@ -161,13 +161,13 @@ class SnakeCanvas(game.GameCanvas):
         self._snake = Snake(self._width // 2, self._height // 2)
         self.start_timer(self._TURN_DELAY)
 
-        self.set_all_cells_color('beige')
-        self.draw_board()
+        self.setup_board()
 
-    def draw_board(self):
+    def setup_board(self):
         '''
         Отрисовка игрового поля
         '''
+        self.set_all_cells_color('beige')
         self._snake.draw(self)
 
     def on_timer(self, timer_step: int):
@@ -175,7 +175,6 @@ class SnakeCanvas(game.GameCanvas):
         События по таймеру
         '''
         self._snake.move()
-        self.draw_board()
 
 class SnakeWidget(game.GameWidget):
     '''
