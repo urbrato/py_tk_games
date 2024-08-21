@@ -131,7 +131,8 @@ class GameCell:
         if image != None:
             x = self._size // 2 + self._left
             y = self._size  // 2 + self._top
-            self._inner_image = self._canvas.create_image(x, y, image=image)
+            self._inner_image = self._canvas.create_image(
+                x, y, image=image)
 
 class GameCanvas(Tk.Canvas):
     '''
