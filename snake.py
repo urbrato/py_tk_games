@@ -50,6 +50,10 @@ class Snake:
     '''
     Змейка
     '''
+    
+    _HEAD_IMAGE = None
+    _BODY_IMAGE = None
+
     def __init__(self, x: int, y: int):
         '''
         Конструктор змейки.
@@ -66,6 +70,30 @@ class Snake:
             GameObject(x, y), 
             GameObject(x + 1, y),
             GameObject(x + 2, y)]
+        
+    def draw(self, canvas: game.GameCanvas):
+        '''
+        Отображение змейки на канве
+
+        :param canvas: канва для отображения
+        :type canvas: game.GameCanvas
+        '''
+        if Snake._HEAD_IMAGE == None:
+            Snake._HEAD_IMAGE = tk.PhotoImage(file='snake_img\\head.png')
+
+        if Snake._BODY_IMAGE == None:
+            Snake._BODY_IMAGE = tk.PhotoImage(file='snake_img\\body.png')
+
+        canvas.draw_image(
+            self._snakeParts[0].x,
+            self._snakeParts[0].y,
+            Snake._HEAD_IMAGE)
+        
+        for i in range(1, len(self._snakeParts)):
+            canvas.draw_image(
+                self._snakeParts[i].x,
+                self._snakeParts[i].y,
+                Snake._BODY_IMAGE)
 
 class SnakeCanvas(game.GameCanvas):
     '''
@@ -83,13 +111,16 @@ class SnakeCanvas(game.GameCanvas):
         '''
         Настройка параметров игры
         '''
+        self._snake = Snake(self._width // 2, self._height // 2)
+
+        self.set_all_cells_color('beige')
         self.draw_board()
 
     def draw_board(self):
         '''
         Отрисовка игрового поля
         '''
-        self.set_all_cells_color('beige')
+        self._snake.draw(self)
 
 class SnakeWidget(game.GameWidget):
     '''
