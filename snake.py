@@ -132,11 +132,20 @@ class Snake:
         '''
         if direction in self._direction.allowables():
             self._direction = direction
+
+    def move(self): 
+        '''
+        Перемещение змейки
+        '''
+        pass
             
 class SnakeCanvas(game.GameCanvas):
     '''
     Игровая канва (основной класс игры)
     '''
+
+    _TURN_DELAY = 300
+
     def init_game(self):
         '''
         Первоначальная настройка игры
@@ -150,6 +159,7 @@ class SnakeCanvas(game.GameCanvas):
         Настройка параметров игры
         '''
         self._snake = Snake(self._width // 2, self._height // 2)
+        self.start_timer(self._TURN_DELAY)
 
         self.set_all_cells_color('beige')
         self.draw_board()
@@ -159,6 +169,13 @@ class SnakeCanvas(game.GameCanvas):
         Отрисовка игрового поля
         '''
         self._snake.draw(self)
+
+    def on_timer(self, timer_step: int):
+        '''
+        События по таймеру
+        '''
+        self._snake.move()
+        self.draw_board()
 
 class SnakeWidget(game.GameWidget):
     '''
