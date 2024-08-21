@@ -143,7 +143,10 @@ class Snake:
         '''
         head = self.create_new_head()
         
-        if (head.x >= 0 and head.x < self._canvas._width and 
+        if self.check_collision(head):
+            self.is_alive = False
+            self._canvas.stop_timer()
+        elif (head.x >= 0 and head.x < self._canvas._width and 
             head.y >= 0 and head.y < self._canvas._height):
             
             self._snakeParts.insert(0, head)
@@ -182,6 +185,20 @@ class Snake:
         tail = self._snakeParts[-1]
         self._canvas.draw_image(tail.x, tail.y, None)
         self._snakeParts.remove(tail)
+
+    def check_collision(self, object: GameObject) -> bool:
+        '''
+        Проверка на столкновение
+
+        Проверяет, что переданный объект не совпадает 
+        ни с одним сегментом змейки
+
+        :param object: объект, который проверяется 
+        на столкновение
+        :type object: GameObject
+        '''
+        return not all(part.x != object.x or part.y != object.y 
+                       for part in self._snakeParts)
             
 class SnakeCanvas(game.GameCanvas):
     '''
