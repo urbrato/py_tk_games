@@ -164,6 +164,10 @@ class GameCanvas(Tk.Canvas):
         self._padx = self._pady = 1
         self._frame_width = widget.frame_width - self._padx * 2
         self._frame_height = widget.frame_height - self._pady * 2
+
+        self._timer_step = 0
+        self._timer_ms = 0
+        self._timer_started = False
         
         self.init_game()
         self.pack()
@@ -174,6 +178,15 @@ class GameCanvas(Tk.Canvas):
         '''
         pass
 
+    def on_timer(self, timer_step: int):
+        '''
+        Переопределите этот метод для реализации действий по таймеру
+
+        :param timer_step: номер шага таймера
+        :type timer_step: int
+        '''
+        pass
+    
     def set_board_size_by_cells_count(self, nx: int, ny: int):
         '''
         Установка размера игрового поля по количеству клеток
@@ -264,6 +277,25 @@ class GameCanvas(Tk.Canvas):
         '''
         self._cells[x][y].set_image(image)
 
+    def start_timer(self, ms: int):
+        '''
+        Запуск таймера
+
+        :param ms: интервал таймера в мс
+        :type ms: int
+        '''
+        if (not self._timer_started):
+            self._timer_started = True
+            self._timer_ms = clamp(ms, 1, 3600000)
+
+            self.after(self._timer_ms, self.__process_timer)
+
+    def stop_timer(self):
+        '''
+        Останов таймера
+        '''
+        self._timer_started = False
+
     def __create_cells(self):
         '''
         Создание клеток
@@ -280,3 +312,14 @@ class GameCanvas(Tk.Canvas):
                              board_left + i * self._cellSize,
                              board_top + j * self._cellSize,
                              self._cellSize))
+                
+    def __process_timer(self):
+        '''
+        Отдача шага таймера
+        '''
+        if self._timer_started:
+            self._timer_step += 1
+            self.on_timer(self._timer_step)
+            
+            if self._timer_started:
+                self.after(self._timer_ms, self.__process_timer)
