@@ -34,7 +34,7 @@ class Apple(GameObject):
         '''
         super().__init__(x, y)
 
-        self._is_alive = True
+        self.is_alive = True
 
     def draw(self, canvas: game.GameCanvas):
         '''
@@ -74,7 +74,7 @@ class Snake:
             GameObject(x + 1, y),
             GameObject(x + 2, y)]
         
-        self._is_alive = True
+        self.is_alive = True
         
     def draw(self, canvas: game.GameCanvas):
         '''
@@ -95,7 +95,7 @@ class Snake:
         canvas.draw_image(
             self._snakeParts[0].x,
             self._snakeParts[0].y,
-            Snake._HEAD_IMAGE if self._is_alive else Snake._DEAD_IMAGE)
+            Snake._HEAD_IMAGE if self.is_alive else Snake._DEAD_IMAGE)
         
         for i in range(1, len(self._snakeParts)):
             canvas.draw_image(
