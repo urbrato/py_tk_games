@@ -46,6 +46,27 @@ class Apple(GameObject):
 
         canvas.draw_image(self.x, self.y, Apple._APPLE_IMAGE)
 
+class Snake:
+    '''
+    Змейка
+    '''
+    def __init__(self, x: int, y: int):
+        '''
+        Конструктор змейки.
+
+        Создаёт список сегментов тела.
+        Тело расположено по горизонтали головой влево.
+
+        :param x: горизонтальная координата головы
+        :type x: int
+        :param y: вертикальная координата головы
+        :type y: int
+        '''
+        self._snakeParts = [
+            GameObject(x, y), 
+            GameObject(x + 1, y),
+            GameObject(x + 2, y)]
+
 class SnakeCanvas(game.GameCanvas):
     '''
     Игровая канва (основной класс игры)
@@ -66,7 +87,7 @@ class SnakeCanvas(game.GameCanvas):
 
     def draw_board(self):
         '''
-        Настройка игрового поля
+        Отрисовка игрового поля
         '''
         self.set_all_cells_color('beige')
 
