@@ -159,7 +159,8 @@ class SnakeCanvas(game.GameCanvas):
         Настройка параметров игры
         '''
         self._snake = Snake(self._width // 2, self._height // 2, self)
-        self.start_timer(self._TURN_DELAY)
+        self._turn_delay = SnakeCanvas._TURN_DELAY
+        self.start_timer(self._turn_delay)
 
         self.setup_board()
 
