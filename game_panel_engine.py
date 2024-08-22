@@ -1,5 +1,11 @@
 import tkinter as Tk
 from some_math import *
+from enum import Enum
+
+class MouseButton(Enum):
+    LEFT = 1
+    MIDDLE = 2
+    RIGHT = 3
 
 class GameCanvas: pass
 
@@ -171,6 +177,7 @@ class GameCanvas(Tk.Canvas):
         self._timer_started = False
         
         self.bind_all('<Key>', self.on_key_press)
+        self.bind_all('<Button>', self.__mouse_click)
 
         self.init_game()
         self.pack()
@@ -195,6 +202,19 @@ class GameCanvas(Tk.Canvas):
         Переопределите этот метод для обработки нажатий клавиш
 
         :param e: событие tkinter <Key>
+        '''
+        pass
+
+    def on_mouse_click(self, button: MouseButton, x: int, y: int):
+        '''
+        Переопределите этот метод для обработки щелчков мыши
+
+        :param button: кнопка мыши
+        :type button: MouseButton
+        :param x: номер клетки по горизонтали
+        :type x: int
+        :param y: номер клетки по вертикали
+        :type y: int
         '''
         pass
     
@@ -311,8 +331,8 @@ class GameCanvas(Tk.Canvas):
         '''
         Создание клеток
         '''
-        board_left = (self._frame_width - self._cellSize * self._width) // 2 + self._padx
-        board_top = (self._frame_height - self._cellSize * self._height) // 2 + self._pady
+        self._board_left = (self._frame_width - self._cellSize * self._width) // 2 + self._padx
+        self._board_top = (self._frame_height - self._cellSize * self._height) // 2 + self._pady
 
         self._cells = []
         for i in range(self._width):
@@ -320,8 +340,8 @@ class GameCanvas(Tk.Canvas):
             for j in range(self._height):
                 self._cells[i].append(
                     GameCell(self, 
-                             board_left + i * self._cellSize,
-                             board_top + j * self._cellSize,
+                             self._board_left + i * self._cellSize,
+                             self._board_top + j * self._cellSize,
                              self._cellSize))
                 
     def __process_timer(self):
@@ -334,3 +354,21 @@ class GameCanvas(Tk.Canvas):
             
             if self._timer_started:
                 self.after(self._timer_ms, self.__process_timer)
+
+    def __mouse_click(self, e):
+        '''
+        Пересчёт координат мыши в номера клетки и вызов переопределённого обработчика
+        '''
+        x = (e.x - self._board_left) // self._cellSize
+        y = (e.y - self._board_top) // self._cellSize
+
+        if (x >= 0 and x < self._width and
+            y >= 0 and y < self._height):
+
+            match e.num:
+                case 1: button = MouseButton.LEFT
+                case 2: button = MouseButton.MIDDLE
+                case 3: button = MouseButton.RIGHT
+                case _: return
+
+            self.on_mouse_click(button, x, y)

@@ -96,6 +96,12 @@ class SweeperCanvas(game.GameCanvas):
             for cell in col:
                 cell.count_mined_neighbours()
 
+    def on_mouse_click(self, button: game.MouseButton, x: int, y: int):
+        '''
+        Обработка щелчка мышью
+        '''
+        pass
+
 class SweeperWidget(game.GameWidget):
     '''
     Игровой виджет
