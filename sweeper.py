@@ -1,5 +1,6 @@
 import tkinter as tk
 import game_panel_engine as game
+from random import randrange
 
 class SweeperCanvas(game.GameCanvas): pass
 
@@ -10,7 +11,7 @@ class GameObject:
 
     _INTACT_IMAGE = None
 
-    def __init__(self, x: int, y: int, canvas: SweeperCanvas):
+    def __init__(self, x: int, y: int, is_mined: bool, canvas: SweeperCanvas):
         '''
         Конструктор игрового объекта
 
@@ -18,11 +19,14 @@ class GameObject:
         :type x: int
         :param y: номер клетки объекта по вертикали
         :type y: int
+        :param is_mined: заминирована ли клетка
+        :type is_mined: bool
         :param canvas: игровая канва
         :type canvas: SweeperCanvas
         '''
         self.x = x
         self.y = y
+        self.is_mined = is_mined
         self._canvas = canvas
 
     def draw(self):
@@ -46,14 +50,20 @@ class SweeperCanvas(game.GameCanvas):
         self.set_board_size_by_cells_size(25)
         self.set_all_cells_border_color('silver')
         self.create_game()
+        print(self.n_mines)
 
     def create_game(self):
+        self.n_mines = 0
+        mine_probability = randrange(10, 20)
         self.game_field: list[list[GameObject]]
         self.game_field = []
         for x in range(self._width):
             self.game_field.append([])
             for y in range(self._height):
-                gmo = GameObject(x, y, self)
+                is_mined = randrange(1, 100) <= mine_probability
+                if is_mined:
+                    self.n_mines += 1
+                gmo = GameObject(x, y, is_mined, self)
                 self.game_field[x].append(gmo)
                 gmo.draw()
 
