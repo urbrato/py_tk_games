@@ -2,6 +2,8 @@ import tkinter as tk
 import game_panel_engine as game
 from random import randrange
 
+class GameObject: pass
+
 class SweeperCanvas(game.GameCanvas): pass
 
 class GameObject:
@@ -38,6 +40,22 @@ class GameObject:
         image = self._INTACT_IMAGE
         self._canvas.draw_image(self.x, self.y, image)
 
+    def get_neighbours(self) -> list[GameObject]:
+        '''
+        Список соседей
+        '''
+        neighbours = []
+        for x in range(max(0, self.x - 1), min(self._canvas._width, self.x + 2)):
+            for y in range(max(0, self.y - 1), min(self._canvas._height, self.y + 2)):
+                neighbours.append(self._canvas.game_field[x][y])
+        return neighbours
+    
+    def count_mined_neighbours(self):
+        '''
+        Подсчёт количества заминированных соседей
+        '''
+        self.n_mined = len(list(filter(lambda x: x.is_mined, self.get_neighbours())))
+
 class SweeperCanvas(game.GameCanvas):
     '''
     Игровая канва
@@ -50,9 +68,11 @@ class SweeperCanvas(game.GameCanvas):
         self.set_board_size_by_cells_size(25)
         self.set_all_cells_border_color('silver')
         self.create_game()
-        print(self.n_mines)
 
     def create_game(self):
+        '''
+        Инициализация новой игры
+        '''
         self.n_mines = 0
         mine_probability = randrange(10, 20)
         self.game_field: list[list[GameObject]]
@@ -66,6 +86,15 @@ class SweeperCanvas(game.GameCanvas):
                 gmo = GameObject(x, y, is_mined, self)
                 self.game_field[x].append(gmo)
                 gmo.draw()
+        self.fill_mined_counts()
+    
+    def fill_mined_counts(self):
+        '''
+        Подсчёт количества заминированных соседей
+        '''
+        for col in self.game_field:
+            for cell in col:
+                cell.count_mined_neighbours()
 
 class SweeperWidget(game.GameWidget):
     '''
