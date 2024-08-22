@@ -253,11 +253,15 @@ class SnakeCanvas(game.GameCanvas):
         '''
         Создание яблока
         '''
-        self._apple = Apple(
-            randint(0, self._width - 1), 
-            randint(0, self._height - 1),
-            self)
-        self._apple.draw()
+        while True:
+            apple = Apple(
+                randint(0, self._width - 1), 
+                randint(0, self._height - 1),
+                self)
+            if not self._snake.check_collision(apple):
+                self._apple = apple
+                apple.draw()
+                break
 
     def game_over(self):
         '''
@@ -283,6 +287,7 @@ class SnakeCanvas(game.GameCanvas):
         else:
             self._snake.move(self._apple)
             if not self._apple.is_alive:
+                self._timer_ms = max(self._timer_ms - 10, 10)
                 self.create_new_apple()
 
     def on_key_press(self, e):
