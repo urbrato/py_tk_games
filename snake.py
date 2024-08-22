@@ -145,7 +145,10 @@ class Snake:
         Изменение направления движения змейки
         '''
         if direction in allowables(self._direction):
-            self._direction = direction
+            if ((direction in HORIZONTAL and self._snakeParts[0].y != self._snakeParts[1].y) or 
+                (direction in VERTICAL and self._snakeParts[0].x != self._snakeParts[1].x)):
+                
+                self._direction = direction
 
     def move(self, apple: Apple): 
         '''
