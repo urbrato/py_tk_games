@@ -1,4 +1,5 @@
 import tkinter as tk
+import tkinter.messagebox as mbox
 import game_panel_engine as game
 from enum import Enum
 from random import randint
@@ -50,6 +51,12 @@ class Apple(GameObject):
 
         self._canvas.draw_image(self.x, self.y, Apple._APPLE_IMAGE)
 
+    def erase(self):
+        '''
+        Стирает изображение яблока с экрана
+        '''
+        self._canvas.draw_image(self.x, self.y, None)
+
 class Direction(Enum):
     '''
     Направление движения
@@ -71,6 +78,8 @@ def allowables(direction):
     else:
         return VERTICAL
 
+class SnakeCanvas(game.GameCanvas): pass
+
 class Snake:
     '''
     Змейка
@@ -80,7 +89,7 @@ class Snake:
     _DEAD_IMAGE = None
     _BODY_IMAGE = None
 
-    def __init__(self, x: int, y: int, canvas: game.GameCanvas):
+    def __init__(self, x: int, y: int, canvas: SnakeCanvas):
         '''
         Конструктор змейки.
 
@@ -121,11 +130,15 @@ class Snake:
             self._snakeParts[0].y,
             Snake._HEAD_IMAGE if self.is_alive else Snake._DEAD_IMAGE)
         
-        for i in range(1, len(self._snakeParts)):
-            self._canvas.draw_image(
-                self._snakeParts[i].x,
-                self._snakeParts[i].y,
-                Snake._BODY_IMAGE)
+        for part in self._snakeParts[1:]:
+            self._canvas.draw_image(part.x, part.y, Snake._BODY_IMAGE)
+            
+    def erase(self):
+        '''
+        Стирает изображение змейки с экрана
+        '''
+        for part in self._snakeParts:
+            self._canvas.draw_image(part.x, part.y, None)
             
     def set_direction(self, direction: Direction):
         '''
@@ -145,7 +158,7 @@ class Snake:
         
         if self.check_collision(head):
             self.is_alive = False
-            self._canvas.stop_timer()
+            self._canvas.is_game_stopped = True
         elif (head.x >= 0 and head.x < self._canvas._width and 
             head.y >= 0 and head.y < self._canvas._height):
             
@@ -157,7 +170,7 @@ class Snake:
                 self.remove_tail()
         else:
             self.is_alive = False
-            self._canvas.stop_timer()
+            self._canvas.is_game_stopped = True
 
         self.draw()
 
@@ -219,6 +232,8 @@ class SnakeCanvas(game.GameCanvas):
         '''
         Настройка параметров игры
         '''
+        self.is_game_stopped = False
+
         self._snake = Snake(self._width // 2, self._height // 2, self)
         self.create_new_apple()
 
@@ -244,13 +259,31 @@ class SnakeCanvas(game.GameCanvas):
             self)
         self._apple.draw()
 
+    def game_over(self):
+        '''
+        Метод конца игры
+        '''
+        self.stop_timer()
+        if mbox.askyesno(
+            'Игра окончена', 
+            f'Змейка съела {len(self._snake._snakeParts) - 3} яблок.\nЖелаете повторить игру?'):
+
+            self._apple.erase()
+            self._snake.erase()
+            self.create_game()
+        else:
+            self.master.destroy()
+
     def on_timer(self, timer_step: int):
         '''
         События по таймеру
         '''
-        self._snake.move(self._apple)
-        if not self._apple.is_alive:
-            self.create_new_apple()
+        if self.is_game_stopped:
+            self.game_over()
+        else:
+            self._snake.move(self._apple)
+            if not self._apple.is_alive:
+                self.create_new_apple()
 
     def on_key_press(self, e):
         key = e.keysym
