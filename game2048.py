@@ -1,4 +1,5 @@
 import tkinter as tk
+import tkinter.font as font
 import game_panel_engine as game
 from random import random, randint
 
@@ -12,6 +13,20 @@ class Game2048Canvas(game.GameCanvas):
         '''
         self.master.title('2048')
         self.set_board_size_by_cells_count(4, 4)
+        self.colors = {
+            0: 'beige', 
+            2: 'pink',
+            4: 'purple1',
+            8: 'RoyalBlue1',
+            16: 'turquoise',
+            32: 'PaleGreen4',
+            64: 'green2',
+            128: 'orange',
+            256: 'salmon',
+            512: 'red2',
+            1024: 'maroon1',
+            2048: 'gold'}
+        self.font = font.Font(family='Courier New', size=48, weight='bold')
         self.create_game()
         self.draw_board()
 
@@ -19,15 +34,21 @@ class Game2048Canvas(game.GameCanvas):
         '''
         Начало новой игры
         '''
-        self.game_field = [[0] * 4] * 4
+        self.game_field = []
+        for i in range(4):
+            self.game_field.append([])
+            for j in range(4):
+                self.game_field[i].append(0)
         self.create_tile()
         self.create_tile()
     
     def draw_board(self):
         '''
-        Первоначальная отрисовка доски
+        Отрисовка доски
         '''
-        self.set_all_cells_color('beige')
+        for x in range(4):
+            for y in range(4):
+                self.draw_tile(x, y)
 
     def create_tile(self):
         '''
@@ -43,6 +64,18 @@ class Game2048Canvas(game.GameCanvas):
                 else:
                     self.game_field[x][y] = 4
                 break
+
+    def draw_tile(self, x: int, y: int):
+        '''
+        Отрисовка плитки
+
+        :param x: горизонтальный индекс плитки
+        :type x: int
+        :param y: вертикальный индекс плитки
+        :type y: int
+        '''
+        self.set_cell_color(x, y, self.colors[self.game_field[x][y]])
+        self.draw_text(x, y, str(self.game_field[x][y]) if self.game_field[x][y] > 0 else ' ', 'black', self.font)
 
 class Game2048Widget(game.GameWidget):
     '''
