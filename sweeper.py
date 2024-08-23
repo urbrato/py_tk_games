@@ -14,6 +14,7 @@ class GameObject:
 
     _INTACT_IMAGE = None
     _MINE_IMAGE = None
+    _FLAG_IMAGE = None
 
     _FONT = None
 
@@ -36,15 +37,21 @@ class GameObject:
         self.y = y
         self.is_mined = is_mined
         self.is_open = False
+        self.has_flag = False
         self._canvas = canvas
 
     def draw(self):
         '''
         Отрисовка объекта
         '''
-        if GameObject._INTACT_IMAGE == None:
-            GameObject._INTACT_IMAGE = tk.PhotoImage(file='sweeper_img\\intact.png')
-        image = GameObject._INTACT_IMAGE
+        if self.has_flag:
+            if GameObject._FLAG_IMAGE == None:
+                GameObject._FLAG_IMAGE = tk.PhotoImage(file='sweeper_img\\flag.png')
+            image = GameObject._FLAG_IMAGE
+        else:
+            if GameObject._INTACT_IMAGE == None:
+                GameObject._INTACT_IMAGE = tk.PhotoImage(file='sweeper_img\\intact.png')
+            image = GameObject._INTACT_IMAGE
         self._canvas.draw_image(self.x, self.y, image)
 
     def get_neighbours(self) -> list[GameObject]:
@@ -67,7 +74,7 @@ class GameObject:
         '''
         Открытие клетки
         '''
-        if self.is_open: return
+        if self.is_open or self.has_flag: return
 
         self.is_open = True
         if self.is_mined:
@@ -82,6 +89,15 @@ class GameObject:
             else:
                 text = str(self.n_mined)
             self._canvas.draw_text(self.x, self.y, text, GameObject._COLORS[self.n_mined - 1], GameObject._FONT)
+
+    def toggle_flag(self):
+        '''
+        Пометка клетки или снятие пометки с неё
+        '''
+        if self.is_open: return
+
+        self.has_flag = not self.has_flag
+        self.draw()
 
 class SweeperCanvas(game.GameCanvas):
     '''
@@ -131,6 +147,8 @@ class SweeperCanvas(game.GameCanvas):
         match button:
             case game.MouseButton.LEFT:
                 self.game_field[x][y].open_tile()
+            case game.MouseButton.RIGHT:
+                self.game_field[x][y].toggle_flag()
 
 class SweeperWidget(game.GameWidget):
     '''
