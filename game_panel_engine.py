@@ -139,6 +139,26 @@ class GameCell:
             y = self._size  // 2 + self._top
             self._inner_image = self._canvas.create_image(
                 x, y, image=image)
+            
+    def set_text(self, text: str, fill: str, font):
+        '''
+        Отображение текста
+
+        :param text: текст для отображения
+        :type text: str
+        :param fill: цвет текста
+        :type fill: str
+        :param font: шрифт
+        '''
+        if self._inner_image != None:
+            self._canvas.delete(self._inner_image)
+
+        x = self._size // 2 + self._left
+        y = self._size // 2 + self._top
+
+        self._inner_image = self._canvas.create_text(
+            x, y, text=text, fill=fill, font=font
+        )
 
 class GameCanvas(Tk.Canvas):
     '''
@@ -307,6 +327,22 @@ class GameCanvas(Tk.Canvas):
         :param image: картинка
         '''
         self._cells[x][y].set_image(image)
+
+    def draw_text(self, x: int, y: int, text: str, fill: str, font):
+        '''
+        Отображение текста в клетке
+
+        :param x: номер клетки по горизонтали
+        :type x: int
+        :param y: номер клетки по вертикали
+        :type y: int
+        :param text: текст
+        :type text: str
+        :param fill: цвет текста
+        :type fill: str
+        :param font: шрифт
+        '''
+        self._cells[x][y].set_text(text, fill, font)
 
     def start_timer(self, ms: int):
         '''
