@@ -93,6 +93,9 @@ class GameObject:
             else:
                 text = str(self.n_mined)
             self._canvas.draw_text(self.x, self.y, text, GameObject._COLORS[self.n_mined - 1], GameObject._FONT)
+            self._canvas.n_unrevealed -= 1
+            if self._canvas.n_unrevealed == self._canvas.n_mines:
+                self._canvas.win()
 
     def toggle_flag(self):
         '''
@@ -122,6 +125,7 @@ class SweeperCanvas(game.GameCanvas):
         Инициализация новой игры
         '''
         self.n_mines = 0
+        self.n_unrevealed = self._width * self._height
         mine_probability = randrange(10, 20)
         self.game_field: list[list[GameObject]]
         self.game_field = []
@@ -151,6 +155,17 @@ class SweeperCanvas(game.GameCanvas):
         if mbox.askyesno(
             'Сапёр',
             'К сожалению, сапёр подорвался на мине\nЖелаете сыграть ещё раз?'):
+            self.create_game()
+        else:
+            self.master.destroy()
+
+    def win(self):
+        '''
+        Действия при выигрыше
+        '''
+        if mbox.askyesno(
+            'Сапёр',
+            f'Успешно найдены все {self.n_mines} мин\nЖелаете сыграть ещё раз?'):
             self.create_game()
         else:
             self.master.destroy()
