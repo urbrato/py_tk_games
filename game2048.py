@@ -113,6 +113,25 @@ class Game2048Canvas(game.GameCanvas):
                 lst[i + 1] = 0
                 result = True
         return result
+    
+    def move_left(self): pass
+
+    def move_right(self): pass
+
+    def move_up(self): pass
+
+    def move_down(self): pass
+
+    def on_key_press(self, e):
+        '''
+        Реакция на клавиатуру
+        '''
+        key = e.keysym
+        match key:
+            case 'Left': self.move_left()
+            case 'Up': self.move_up()
+            case 'Right': self.move_right()
+            case 'Down': self.move_down()
 
 class Game2048Widget(game.GameWidget):
     '''
