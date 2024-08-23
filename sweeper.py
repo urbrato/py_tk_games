@@ -88,14 +88,21 @@ class GameObject:
                 GameObject._FONT = font.Font(family='Courier', size=12, weight='bold')
             if self.n_mined == 0:
                 text = ' '
-                for cell in self.get_neighbours():
-                    cell.open_tile()
+                self.open_neighbours()
             else:
                 text = str(self.n_mined)
             self._canvas.draw_text(self.x, self.y, text, GameObject._COLORS[self.n_mined - 1], GameObject._FONT)
             self._canvas.n_unrevealed -= 1
             if self._canvas.n_unrevealed == self._canvas.n_mines:
                 self._canvas.win()
+
+    def open_neighbours(self):
+        '''
+        Открытие соседей клетки
+        '''
+        if self.is_open:
+            for cell in self.get_neighbours():
+                cell.open_tile()
 
     def toggle_flag(self):
         '''
@@ -177,6 +184,8 @@ class SweeperCanvas(game.GameCanvas):
         match button:
             case game.MouseButton.LEFT:
                 self.game_field[x][y].open_tile()
+            case game.MouseButton.MIDDLE:
+                self.game_field[x][y].open_neighbours()
             case game.MouseButton.RIGHT:
                 self.game_field[x][y].toggle_flag()
 
