@@ -96,6 +96,23 @@ class Game2048Canvas(game.GameCanvas):
                         result = True
                         lst[j], lst[j + 1] = lst[j + 1], lst[j]
         return result
+    
+    def merge_list(self, lst: list[int]) -> bool:
+        '''
+        Соединение пар одинаковых ненулевых элементов
+
+        Если удалось что-то соединить, возвращает True, иначе False
+
+        :param lst: список
+        :type lst: list[int]
+        '''
+        result = False
+        for i in range(3):
+            if lst[i] > 0 and lst[i] == lst[i + 1]:
+                lst[i] *= 2
+                lst[i + 1] = 0
+                result = True
+        return result
 
 class Game2048Widget(game.GameWidget):
     '''
