@@ -77,6 +77,26 @@ class Game2048Canvas(game.GameCanvas):
         self.set_cell_color(x, y, self.colors[self.game_field[x][y]])
         self.draw_text(x, y, str(self.game_field[x][y]) if self.game_field[x][y] > 0 else ' ', 'black', self.font)
 
+    def compress_list(self, lst: list[int]) -> bool:
+        '''
+        Сжатие списка
+
+        Все нули в списке оттаскивает к концу
+
+        Если удалось что-то изменить в списке, возвращает True, иначе False
+
+        :param lst: список
+        :type lst: list[int]
+        '''
+        result = False
+        for i in range(2, -1, -1):
+            if lst[i] == 0:
+                for j in range(i, 3):
+                    if lst[j + 1] > 0:
+                        result = True
+                        lst[j], lst[j + 1] = lst[j + 1], lst[j]
+        return result
+
 class Game2048Widget(game.GameWidget):
     '''
     Игровой виджет
