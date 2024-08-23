@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import font
+import tkinter.messagebox as mbox
 import game_panel_engine as game
 from random import randrange
 
@@ -81,11 +82,14 @@ class GameObject:
             if GameObject._MINE_IMAGE == None:
                 GameObject._MINE_IMAGE = tk.PhotoImage(file='sweeper_img\\mine.png')
             self._canvas.draw_image(self.x, self.y, GameObject._MINE_IMAGE)
+            self._canvas.game_lost()
         else:
             if GameObject._FONT == None:
                 GameObject._FONT = font.Font(family='Courier', size=12, weight='bold')
             if self.n_mined == 0:
                 text = ' '
+                for cell in self.get_neighbours():
+                    cell.open_tile()
             else:
                 text = str(self.n_mined)
             self._canvas.draw_text(self.x, self.y, text, GameObject._COLORS[self.n_mined - 1], GameObject._FONT)
@@ -139,6 +143,17 @@ class SweeperCanvas(game.GameCanvas):
         for col in self.game_field:
             for cell in col:
                 cell.count_mined_neighbours()
+
+    def game_lost(self):
+        '''
+        Действия при проигрыше
+        '''
+        if mbox.askyesno(
+            'Сапёр',
+            'К сожалению, сапёр подорвался на мине\nЖелаете сыграть ещё раз?'):
+            self.create_game()
+        else:
+            self.master.destroy()
 
     def on_mouse_click(self, button: game.MouseButton, x: int, y: int):
         '''
