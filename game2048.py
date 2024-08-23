@@ -12,6 +12,7 @@ class Game2048Canvas(game.GameCanvas):
         self.master.title('2048')
         self.set_board_size_by_cells_count(4, 4)
         self.create_game()
+        self.draw_board()
 
     def create_game(self):
         '''
@@ -19,6 +20,9 @@ class Game2048Canvas(game.GameCanvas):
         '''
         self.game_field = [[0] * 4] * 4
         print(self.game_field)
+    
+    def draw_board(self):
+        self.set_all_cells_color('beige')
 
 class Game2048Widget(game.GameWidget):
     '''
