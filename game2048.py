@@ -7,12 +7,15 @@ class Game2048Canvas(game.GameCanvas):
     '''
     Игровая канва
     '''
+    
+    SIDE_LEN = 4
+
     def init_game(self):
         '''
         Инициализация игры
         '''
         self.master.title('2048')
-        self.set_board_size_by_cells_count(4, 4)
+        self.set_board_size_by_cells_count(Game2048Canvas.SIDE_LEN, Game2048Canvas.SIDE_LEN)
         self.colors = {
             0: 'beige', 
             2: 'pink',
@@ -35,9 +38,9 @@ class Game2048Canvas(game.GameCanvas):
         Начало новой игры
         '''
         self.game_field = []
-        for i in range(4):
+        for i in range(Game2048Canvas.SIDE_LEN):
             self.game_field.append([])
-            for j in range(4):
+            for j in range(Game2048Canvas.SIDE_LEN):
                 self.game_field[i].append(0)
         self.create_tile()
         self.create_tile()
@@ -46,8 +49,8 @@ class Game2048Canvas(game.GameCanvas):
         '''
         Отрисовка доски
         '''
-        for x in range(4):
-            for y in range(4):
+        for x in range(Game2048Canvas.SIDE_LEN):
+            for y in range(Game2048Canvas.SIDE_LEN):
                 self.draw_tile(x, y)
 
     def create_tile(self):
@@ -55,8 +58,8 @@ class Game2048Canvas(game.GameCanvas):
         Создание новой плитки
         '''
         while True:
-            x = randint(0, 3)
-            y = randint(0, 3)
+            x = randint(0, Game2048Canvas.SIDE_LEN - 1)
+            y = randint(0, Game2048Canvas.SIDE_LEN - 1)
             
             if self.game_field[x][y] == 0:
                 if random() < 0.9:
@@ -89,9 +92,9 @@ class Game2048Canvas(game.GameCanvas):
         :type lst: list[int]
         '''
         result = False
-        for i in range(2, -1, -1):
+        for i in range(Game2048Canvas.SIDE_LEN - 2, -1, -1):
             if lst[i] == 0:
-                for j in range(i, 3):
+                for j in range(i, Game2048Canvas.SIDE_LEN - 1):
                     if lst[j + 1] > 0:
                         result = True
                         lst[j], lst[j + 1] = lst[j + 1], lst[j]
@@ -107,7 +110,7 @@ class Game2048Canvas(game.GameCanvas):
         :type lst: list[int]
         '''
         result = False
-        for i in range(3):
+        for i in range(Game2048Canvas.SIDE_LEN - 1):
             if lst[i] > 0 and lst[i] == lst[i + 1]:
                 lst[i] *= 2
                 lst[i + 1] = 0
@@ -118,7 +121,19 @@ class Game2048Canvas(game.GameCanvas):
 
     def move_right(self): pass
 
-    def move_up(self): pass
+    def move_up(self): 
+        '''
+        Сдвиг вверх
+        '''
+        changed = False
+
+        for col in self.game_field:
+            changed |= self.compress_list(col)
+            changed |= self.merge_list(col)
+            changed |= self.compress_list(col)
+
+        if changed:
+            self.create_tile()
 
     def move_down(self): pass
 
@@ -132,6 +147,7 @@ class Game2048Canvas(game.GameCanvas):
             case 'Up': self.move_up()
             case 'Right': self.move_right()
             case 'Down': self.move_down()
+        self.draw_board()
 
 class Game2048Widget(game.GameWidget):
     '''
