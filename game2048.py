@@ -129,7 +129,17 @@ class Game2048Canvas(game.GameCanvas):
             lambda x: list(x), 
             zip(*self.game_field)))
 
-    def move_right(self): pass
+    def move_right(self): 
+        '''
+        Сдвиг вправо
+        '''
+        self.game_field = list(map(
+            lambda x: list(x), 
+            zip(*self.game_field)))
+        self.move_down()
+        self.game_field = list(map(
+            lambda x: list(x), 
+            zip(*self.game_field)))
 
     def move_up(self): 
         '''
