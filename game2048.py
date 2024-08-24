@@ -135,7 +135,17 @@ class Game2048Canvas(game.GameCanvas):
         if changed:
             self.create_tile()
 
-    def move_down(self): pass
+    def move_down(self): 
+        '''
+        Сдвиг вниз
+        '''
+        for col in self.game_field:
+            col.reverse()
+
+        self.move_up()
+
+        for col in self.game_field:
+            col.reverse()
 
     def on_key_press(self, e):
         '''
