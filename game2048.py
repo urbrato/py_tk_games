@@ -117,7 +117,17 @@ class Game2048Canvas(game.GameCanvas):
                 result = True
         return result
     
-    def move_left(self): pass
+    def move_left(self): 
+        '''
+        Сдвиг влево
+        '''
+        self.game_field = list(map(
+            lambda x: list(x), 
+            zip(*self.game_field)))
+        self.move_up()
+        self.game_field = list(map(
+            lambda x: list(x), 
+            zip(*self.game_field)))
 
     def move_right(self): pass
 
